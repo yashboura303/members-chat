@@ -4,7 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const session = require("express-session");
-const exphbs = require('express-handlebars');
+const ejsLint = require('ejs-lint');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const passport = require("passport");
@@ -15,15 +15,14 @@ const app = express();
 //mongo atlas conncetion
 const mongoose = require('mongoose');
 const mongoDB = 'mongodb+srv://yash:yash123boura@cluster0-jux9l.mongodb.net/inventory?retryWrites=true&w=majority';
-mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
+app.set('view engine', 'ejs');
 
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
@@ -65,6 +64,32 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//login check for template 
+app.use(function (req, res, next) {
+  res.locals.login = req.isAuthenticated();
+  next();
+});
+
+app.use(function(req, res, next) {
+	if (req.isAuthenticated()){
+		res.locals.currentUser = req.user;
+	}
+  else{
+    res.locals.currentUser = {};
+  }
+  next();
+});
+
+app.use(function (req, res, next) {
+  if (req.isAuthenticated()) {
+    res.locals.isMember = req.user.isMember;
+    next();
+  }
+  else {
+  	res.locals.isMember = false;
+  	next();
+  }
+});
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

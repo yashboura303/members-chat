@@ -1,0 +1,43 @@
+<%- include('main') -%>
+
+<h2 class="text-center">Members Chat</h2>
+<hr>
+<% if (login) { %>
+  <h3>Hi, <%= currentUser.username %></h3>
+<% }%>
+
+<% if (currentUser.isMember==false) { %>
+
+<h3>Become a <a href="makeMember"> member</a> to see who posts messages!</h3>
+<% }%>
+
+<ul class="list-unstyled py-2">
+
+<% messages.forEach(function(message) { %>
+        <li><strong  class="text-info">Title: </strong><%= message.title %> </li>
+        	
+        </li> <strong class="text-info">Message: </strong><%= message.message %></li>
+        <li><%=  moment(message.date).format('Do MMMM, YYYY') %></li>
+		<% if (currentUser.isMember) { %>
+  <li><strong class="text-info">By: </strong><%= message.user.username %></li>
+<% }
+else { %>
+		<li><strong class="text-info">By: </strong>*****</li>
+<%}
+%>
+
+<% if (currentUser.isAdmin) { %>
+<a href="delete/<%= message._id %>" class="mb-4 btn btn-outline-danger btn-sm">Delete</a>
+<% }%>
+<hr>
+ <% }); %>
+
+
+
+
+	<br>
+</ul>
+ </div>
+</body>
+
+</html>
