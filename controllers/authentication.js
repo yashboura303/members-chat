@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
 const user = require('../models/user.js');
+const bcrypt = require('bcrypt');
 exports.load_signup = (req, res, next) => {
     res.render('signup');
 };
@@ -10,10 +11,10 @@ exports.signup = async (req, res, next) => {
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
-
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const new_user = await new user({
         username: req.body.username,
-        password: req.body.password,
+        password: hashedPassword,
         fullName: req.body.fullname
     }).save(err => {
         if (err) {
