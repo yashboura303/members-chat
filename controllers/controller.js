@@ -1,6 +1,8 @@
 const Message = require('../models/messages.js');
 const User = require('../models/user.js');
 const moment = require('moment');
+const dotenv = require('dotenv');
+dotenv.config();
 exports.show_message_form = (req, res, next) => {
     res.render('message');
 };
@@ -28,7 +30,7 @@ exports.home_page = async (req, res, next) => {
 	console.log(res.locals.isMember);
     const messages = await Message.find({}).populate('user');
     try {
-        res.render('index', { messages, user: res.locals.currentUser,moment: moment });
+        res.render('index', { messagess:messages, user: res.locals.currentUser,moment: moment });
     } catch (err) {
         res.status(500).send(err);
     }
@@ -36,18 +38,27 @@ exports.home_page = async (req, res, next) => {
 };
 
 exports.show_member_form = (req, res, next) => {
-    res.render('makeMember');
+	message = {
+		msg:""
+	};
+    res.render('makeMember', {message});
 };
 
 exports.check_member_code = async (req, res, next) => {
-    if (req.body.memberPassword == "member") {
+	message = {
+		msg:"Incorrect secret code"
+	};
+    if (req.body.memberPassword == process.env.MESSAGE_KEY) {
         try {
             const user = await User.findByIdAndUpdate(req.user._id, { $set: { isMember: true } });
         } catch (err) {
             res.status(500).send(err);
         }
     }
-    if (req.body.memberPassword=="true") {
+    else{
+    	res.render('makeMember', { message});
+    }
+    if (req.body.memberPassword) {
         try {
 
             const user = await User.findByIdAndUpdate(req.user._id, { $set: { isAdmin: true } });

@@ -2,6 +2,7 @@ const { validationResult } = require('express-validator');
 const user = require('../models/user.js');
 const bcrypt = require('bcrypt');
 exports.load_signup = (req, res, next) => {
+ 
     res.render('signup');
 };
 
@@ -20,14 +21,10 @@ exports.signup = async (req, res, next) => {
         if (err) {
             return next(err);
         }
-        res.redirect("/");
+        res.redirect("/login");
     });
 };
 
 exports.load_login = (req, res, next) => {
     res.render('login');
 };
-
-// exports.login = (req, res, next) => {
-    // res.render('login');
-// };

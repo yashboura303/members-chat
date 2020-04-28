@@ -6,18 +6,6 @@ const controller = require('../controllers/controller');
 const passport = require("passport");
 
 
-
-// function setMemberLocal(req, res, next) {
-//   if (req.isAuthenticated()) {
-//     res.locals.isMember = req.user.isMember;
-//     next();
-//   }
-//   else {
-//   	res.locals.isMember = false;
-//   	next();
-//   }
-// }
-
 function checkMember(req, res, next) {
 	if (req.isAuthenticated()){
 		if (req.user.isMember){
@@ -66,7 +54,8 @@ router.get('/login', auth_controller.load_login);
 
 router.post('/login', passport.authenticate("local", {
     successRedirect: "/",
-    failureRedirect: "/signup"
+    failureRedirect: "/login",
+    failureFlash:true
   }));
 
 

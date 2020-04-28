@@ -8,13 +8,18 @@ const ejsLint = require('ejs-lint');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const passport = require("passport");
-const LocalStrategy = require('passport-local').Strategy;
 const User = require('./models/user');
+const initializePassport = require('./config/passport');
+const flash = require('express-flash');
 const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
+
+
 
 //mongo atlas conncetion
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb+srv://yash:yash123boura@cluster0-jux9l.mongodb.net/inventory?retryWrites=true&w=majority';
+const mongoDB = process.env.MONGO_ATLAS_KEY;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -24,40 +29,15 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
+initializePassport(passport);
+
+app.use(flash());
+app.use(session({ secret: process.env.SESSION_KEY, resave: false, saveUninitialized: true }));
+
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
-
-passport.use(
-    new LocalStrategy((username, password, done) => {
-        User.findOne({ username: username }, (err, user) => {
-            if (err) {
-                return done(err);
-            }
-            if (!user) {
-                return done(null, false, { msg: "Incorrect username" });
-            }
-            if (user.password !== password) {
-                return done(null, false, { msg: "Incorrect password" });
-            }
-            return done(null, user);
-        });
-    })
-);
-
-passport.serializeUser(function(user, done) {
-    done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
-        done(err, user);
-    });
-});
-
-
-
 
 app.use(logger('dev'));
 app.use(express.json());

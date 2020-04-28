@@ -1,20 +1,20 @@
 <%- include('main') -%>
 <h3 class="my-5 text-center">Sign Up</h3>
 <div class="container-fluid ">
-	
+
  <form action="/signup" method="post">
    <div class="form">
      <div class="form-group col-md-6">
        <label for="inputEmail4">User Name</label>
-       <input type="text" name="username" class="form-control" placeholder="username" >
+       <input type="text" name="username" class="form-control" placeholder="username" required >
      </div>
      <div class="form-group col-md-6">
        <label for="inputPassword4">Password</label>
-       <input type="password" name="password" class="form-control" id="inputPassword4" placeholder="password">
+       <input type="password" name="password" class="form-control" id="inputPassword4" placeholder="password" required>
      </div>
      <div class="form-group col-md-6">
        <label for="inputPassword4">Full Name</label>
-       <input type="text" name="fullname" class="form-control" id="" placeholder="full name">
+       <input type="text" name="fullname" class="form-control" id="" placeholder="full name" required>
      </div>
    <div class="container">
    <button type="submit" class=" btn btn-outline-success ">Sign Up</button>

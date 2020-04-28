@@ -2,7 +2,11 @@
 <div class="container">
         <div class="row justify-content-center">
             <div class="col-12">
-            
+            <% if (message.msg) { %>
+                <div class="alert alert-danger" role="alert">
+  <%= message.msg %>
+</div>
+  <% } %>
                 
                 <h3>Become a member</h3>
                 <form action="" method="POST">

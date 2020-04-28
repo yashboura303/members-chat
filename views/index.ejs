@@ -13,13 +13,13 @@
 
 <ul class="list-unstyled py-2">
 
-<% messages.forEach(function(message) { %>
-        <li><strong  class="text-info">Title: </strong><%= message.title %> </li>
+<% messagess.forEach(function(msg) { %>
+        <li><strong  class="text-info">Title: </strong><%= msg.title %> </li>
         	
-        </li> <strong class="text-info">Message: </strong><%= message.message %></li>
-        <li><%=  moment(message.date).format('Do MMMM, YYYY') %></li>
+        </li> <strong class="text-info">Message: </strong><%= msg.message %></li>
+        <li><%=  moment(msg.date).format('Do MMMM, YYYY') %></li>
 		<% if (currentUser.isMember) { %>
-  <li><strong class="text-info">By: </strong><%= message.user.username %></li>
+  <li><strong class="text-info">By: </strong><%= msg.user.username %></li>
 <% }
 else { %>
 		<li><strong class="text-info">By: </strong>*****</li>
@@ -27,7 +27,7 @@ else { %>
 %>
 
 <% if (currentUser.isAdmin) { %>
-<a href="delete/<%= message._id %>" class="mb-4 btn btn-outline-danger btn-sm">Delete</a>
+<a href="delete/<%= msg._id %>" class="mb-4 btn btn-outline-danger btn-sm">Delete</a>
 <% }%>
 <hr>
  <% }); %>
